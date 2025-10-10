@@ -1,17 +1,22 @@
 package com.tienda.services;
 
-import com.tienda.domain.Categoria;
-import com.tienda.repository.CategoriaRepository;
+import tienda.domain.Categoria;
+import tienda.repository.CategoriaRepository;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
  
 @Service
-public class CategoriaServices {
- 
+public class CategoriaService {
+
     @Autowired
     private CategoriaRepository categoriaRepository;
+    
     @Transactional(readOnly=true)
     public List<Categoria> getCategorias(boolean activo) {
         if (activo) {
@@ -19,8 +24,8 @@ public class CategoriaServices {
         }
         return categoriaRepository.findAll();
     }
- 
-@Transactional(readOnly = true)
+    
+    @Transactional(readOnly = true)
     public Optional<Categoria> getCategoria(Integer idCategoria) {
         return categoriaRepository.findById(idCategoria);
     }
