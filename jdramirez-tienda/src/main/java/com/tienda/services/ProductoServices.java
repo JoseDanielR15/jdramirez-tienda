@@ -4,8 +4,8 @@
  */
 package com.tienda.services;
 
-import com.tienda.tienda.domain.Categoria;
-import com.tienda.tienda.repository.CategoriaRepository;
+import com.tienda.tienda.domain.Producto;
+import com.tienda.tienda.repository.ProductoRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -16,37 +16,37 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class CategoriaServices {
+public class ProductoServices {
 
     @Autowired
-    private CategoriaRepository categoriaRepository;
+    private ProductoRepository productoRepository;
     
     @Transactional(readOnly=true)
-    public List<Categoria> getCategorias(boolean activo) {
+    public List<Producto> getProductos(boolean activo) {
         if (activo) {
-            return categoriaRepository.findByActivoTrue();
+            return productoRepository.findByActivoTrue();
         }
-        return categoriaRepository.findAll();
+        return productoRepository.findAll();
     }
     
     @Transactional(readOnly = true)
-    public Optional<Categoria> getCategoria(Integer idCategoria) {
-        return categoriaRepository.findById(idCategoria);
+    public Optional<Producto> getProducto(Integer idProducto) {
+        return productoRepository.findById(idProducto);
     }
 
     @Autowired
     private FirebaseStorageService firebaseStorageService;
 
     @Transactional
-    public void save(Categoria categoria, MultipartFile imagenFile) {
-        categoria = categoriaRepository.save(categoria);
+    public void save(Producto producto, MultipartFile imagenFile) {
+        producto = productoRepository.save(producto);
         if (!imagenFile.isEmpty()) { //Si no está vacío... pasaron una imagen...            
             try {
                 String rutaImagen = firebaseStorageService.uploadImage(
-                        imagenFile, "categoria",
-                        categoria.getIdCategoria());
-                categoria.setRutaImagen(rutaImagen);
-                categoriaRepository.save(categoria);
+                        imagenFile, "producto",
+                        producto.getIdProducto());
+                producto.setRutaImagen(rutaImagen);
+                productoRepository.save(producto);
             } catch (IOException e) {
 
             }
@@ -54,18 +54,17 @@ public class CategoriaServices {
     }
 
     @Transactional
-    public void delete(Integer idCategoria) {
+    public void delete(Integer idProducto) {
         // Verifica si la categoría existe antes de intentar eliminarlo
-        if (!categoriaRepository.existsById(idCategoria)) {
+        if (!productoRepository.existsById(idProducto)) {
             // Lanza una excepción para indicar que el usuario no fue encontrado
-            throw new IllegalArgumentException("La categoría con ID " + idCategoria + " no existe.");
+            throw new IllegalArgumentException("La categoría con ID " + idProducto + " no existe.");
         }
         try {
-            categoriaRepository.deleteById(idCategoria);
+            productoRepository.deleteById(idProducto);
         } catch (DataIntegrityViolationException e) {
             // Lanza una nueva excepción para encapsular el problema de integridad de datos
-            throw new IllegalStateException("No se puede eliminar la categoria. Tiene datos asociados.", e);
+            throw new IllegalStateException("No se puede eliminar la producto. Tiene datos asociados.", e);
         }
     }
 }
-

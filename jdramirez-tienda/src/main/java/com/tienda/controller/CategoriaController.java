@@ -1,8 +1,11 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.tienda.controller;
 
-import com.tienda.services.CategoriaServices;
-import tienda.domain.Categoria;
-import tienda.services.CategoriaService;
+import com.tienda.tienda.domain.Categoria;
+import com.tienda.tienda.services.CategoriaServices;
 import jakarta.validation.Valid;
 import java.util.Locale;
 import java.util.Optional;
@@ -17,13 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
- 
+
 @Controller
 @RequestMapping("/categoria")
 public class CategoriaController {
- 
+
     @Autowired
     private CategoriaServices categoriaService;
+    
     @GetMapping("/listado")
     public String listado(Model model) {
         var categorias = categoriaService.getCategorias(false);
@@ -32,7 +36,7 @@ public class CategoriaController {
         return "/categoria/listado";
     }
     
- @Autowired
+    @Autowired
     private MessageSource messageSource;
 
     @PostMapping("/guardar")
@@ -52,13 +56,13 @@ public class CategoriaController {
           categoriaService.delete(idCategoria);          
         } catch (IllegalArgumentException e) {            
             titulo="error"; // Captura la excepción de argumento inválido para el mensaje de "no existe"
-            detalle="cateogira.error01";
+            detalle="categoria.error01";
         } catch (IllegalStateException e) {            
             titulo="error"; // Captura la excepción de estado ilegal para el mensaje de "datos asociados"
-            detalle="cateogira.error02";            
+            detalle="categoria.error02";            
         } catch (Exception e) {            
             titulo="error";  // Captura cualquier otra excepción inesperada
-            detalle="cateogira.error03";
+            detalle="categoria.error03";
         }
         redirectAttributes.addFlashAttribute(titulo,messageSource.getMessage(detalle, null, Locale.getDefault()));
         return "redirect:/categoria/listado";
@@ -74,7 +78,7 @@ public class CategoriaController {
         model.addAttribute("categoria", categoriaOpt.get());
         return "/categoria/modifica";
     }
-    
+
 }
 
 
