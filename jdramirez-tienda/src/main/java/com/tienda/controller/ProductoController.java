@@ -4,9 +4,9 @@
  */
 package com.tienda.controller;
 
-import com.tienda.tienda.domain.Producto;
-import com.tienda.tienda.services.CategoriaServices;
-import com.tienda.tienda.services.ProductoServices;
+import com.tienda.domain.Producto;
+import com.tienda.services.CategoriaServices;
+import com.tienda.services.ProductoServices;
 import jakarta.validation.Valid;
 import java.util.Locale;
 import java.util.Optional;
@@ -27,22 +27,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProductoController {
 
     @Autowired
-    private ProductoServices productoService;
+    private ProductoService productoService;
 
     @Autowired
-    private CategoriaServices categoriaService;
+    private CategoriaService categoriaService;
 
     @GetMapping("/listado")
-
     public String listado(Model model) {
-
         var productos = productoService.getProductos(false);
         model.addAttribute("productos", productos);
         model.addAttribute("totalProductos", productos.size());
         var categorias = categoriaService.getCategorias(true);
         model.addAttribute("categorias", categorias);
         return "/producto/listado";
-
     }
 
     @Autowired
@@ -65,19 +62,19 @@ public class ProductoController {
             productoService.delete(idProducto);
         } catch (IllegalArgumentException e) {
             titulo = "error"; // Captura la excepción de argumento inválido para el mensaje de "no existe"
-            detalle = "producto.error01";
+            detalle = "cateogira.error01";
         } catch (IllegalStateException e) {
             titulo = "error"; // Captura la excepción de estado ilegal para el mensaje de "datos asociados"
-            detalle = "producto.error02";
+            detalle = "cateogira.error02";
         } catch (Exception e) {
             titulo = "error";  // Captura cualquier otra excepción inesperada
-            detalle = "producto.error03";
+            detalle = "cateogira.error03";
         }
         redirectAttributes.addFlashAttribute(titulo, messageSource.getMessage(detalle, null, Locale.getDefault()));
         return "redirect:/producto/listado";
     }
 
-    @GetMapping("/modificar/{idProducto}")
+    @GetMapping("/usuaio/modificar/{idUsuario}")
     public String modificar(@PathVariable("idProducto") Integer idProducto, Model model, RedirectAttributes redirectAttributes) {
         Optional<Producto> productoOpt = productoService.getProducto(idProducto);
         if (productoOpt.isEmpty()) {

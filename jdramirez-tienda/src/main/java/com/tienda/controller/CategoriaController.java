@@ -4,8 +4,8 @@
  */
 package com.tienda.controller;
 
-import com.tienda.tienda.domain.Categoria;
-import com.tienda.tienda.services.CategoriaServices;
+import com.tienda.domain.Categoria;
+import com.tienda.services.CategoriaServices;
 import jakarta.validation.Valid;
 import java.util.Locale;
 import java.util.Optional;
@@ -26,7 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CategoriaController {
 
     @Autowired
-    private CategoriaServices categoriaService;
+    private CategoriaService categoriaService;
     
     @GetMapping("/listado")
     public String listado(Model model) {
@@ -56,13 +56,13 @@ public class CategoriaController {
           categoriaService.delete(idCategoria);          
         } catch (IllegalArgumentException e) {            
             titulo="error"; // Captura la excepción de argumento inválido para el mensaje de "no existe"
-            detalle="categoria.error01";
+            detalle="cateogira.error01";
         } catch (IllegalStateException e) {            
             titulo="error"; // Captura la excepción de estado ilegal para el mensaje de "datos asociados"
-            detalle="categoria.error02";            
+            detalle="cateogira.error02";            
         } catch (Exception e) {            
             titulo="error";  // Captura cualquier otra excepción inesperada
-            detalle="categoria.error03";
+            detalle="cateogira.error03";
         }
         redirectAttributes.addFlashAttribute(titulo,messageSource.getMessage(detalle, null, Locale.getDefault()));
         return "redirect:/categoria/listado";

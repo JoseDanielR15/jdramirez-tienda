@@ -5,8 +5,8 @@
 
 package com.tienda.controller;
 
-import tienda.services.CategoriaService;
-import tienda.services.ProductoService;
+import com.tienda.services.CategoriaServices;
+import com.tienda.services.ProductoServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
