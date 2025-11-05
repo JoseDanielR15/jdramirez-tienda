@@ -4,8 +4,8 @@
  */
 package com.tienda.services;
 
-import com.tienda.tienda.domain.Categoria;
-import com.tienda.tienda.repository.CategoriaRepository;
+import com.tienda.domain.Categoria;
+import com.tienda.repository.CategoriaRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;

@@ -93,5 +93,4 @@ public class ProjectConfig implements WebMvcConfigurer {
             return StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         }
     }
-
 }

@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class ProductoService {
+public class ProductoServices {
 
     private final ProductoRepository productoRepository;
     private final FirebaseStorageService firebaseStorageService;
 
-    public ProductoService(ProductoRepository productoRepository, FirebaseStorageService firebaseStorageService) {
+    public ProductoServices(ProductoRepository productoRepository, FirebaseStorageService firebaseStorageService) {
         this.productoRepository = productoRepository;
         this.firebaseStorageService = firebaseStorageService;
     }
@@ -65,7 +65,7 @@ public class ProductoService {
         }
     }
 
-    @Transactional(readOnly = true)
+     @Transactional(readOnly = true)
     public List<Producto> consultaDerivada(double precioInf, double precioSup) {
         return productoRepository.findByPrecioBetweenOrderByPrecioAsc(precioInf, precioSup);
     }
@@ -79,5 +79,11 @@ public class ProductoService {
     public List<Producto> consultaSQL(double precioInf, double precioSup) {
         return productoRepository.consultaSQL(precioInf, precioSup);
     }
+    
+    //Codigo nuevo de la tarea Practicas-2 semana 9
+    @Transactional(readOnly = true)
+    public List<Producto> getProductosPorCategoria(Integer idCategoria) {
+    return productoRepository.findByCategoria_IdCategoriaOrderByPrecioAsc(idCategoria);
+}
 
 }

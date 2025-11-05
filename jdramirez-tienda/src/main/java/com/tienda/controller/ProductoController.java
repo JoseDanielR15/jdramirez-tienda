@@ -27,17 +27,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProductoController {
 
     @Autowired
-    private ProductoService productoService;
+    private ProductoServices productoServices;
 
     @Autowired
-    private CategoriaService categoriaService;
+    private CategoriaServices categoriaServices;
 
     @GetMapping("/listado")
     public String listado(Model model) {
-        var productos = productoService.getProductos(false);
+        var productos = productoServices.getProductos(false);
         model.addAttribute("productos", productos);
         model.addAttribute("totalProductos", productos.size());
-        var categorias = categoriaService.getCategorias(true);
+        var categorias = categoriaServices.getCategorias(true);
         model.addAttribute("categorias", categorias);
         return "/producto/listado";
     }
@@ -48,7 +48,7 @@ public class ProductoController {
     @PostMapping("/guardar")
     public String guardar(@Valid Producto producto, @RequestParam MultipartFile imagenFile, RedirectAttributes redirectAttributes) {
 
-        productoService.save(producto, imagenFile);
+        productoServices.save(producto, imagenFile);
         redirectAttributes.addFlashAttribute("todoOk", messageSource.getMessage("mensaje.actualizado", null, Locale.getDefault()));
 
         return "redirect:/producto/listado";
@@ -59,7 +59,7 @@ public class ProductoController {
         String titulo = "todoOk";
         String detalle = "mensaje.eliminado";
         try {
-            productoService.delete(idProducto);
+            productoServices.delete(idProducto);
         } catch (IllegalArgumentException e) {
             titulo = "error"; // Captura la excepción de argumento inválido para el mensaje de "no existe"
             detalle = "cateogira.error01";
@@ -76,13 +76,13 @@ public class ProductoController {
 
     @GetMapping("/usuaio/modificar/{idUsuario}")
     public String modificar(@PathVariable("idProducto") Integer idProducto, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Producto> productoOpt = productoService.getProducto(idProducto);
+        Optional<Producto> productoOpt = productoServices.getProducto(idProducto);
         if (productoOpt.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", messageSource.getMessage("producto.error01", null, Locale.getDefault()));
             return "redirect:/producto/listado";
         }
         model.addAttribute("producto", productoOpt.get());
-        var categorias = categoriaService.getCategorias(true);
+        var categorias = categoriaServices.getCategorias(true);
         model.addAttribute("categorias", categorias);
         return "/producto/modifica";
     }

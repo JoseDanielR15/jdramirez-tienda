@@ -1,6 +1,7 @@
 package com.tienda.controller;
 
-import com.tienda.service.ProductoServices;
+import com.tienda.services.ProductoServices;
+import com.tienda.services.CategoriaServices; //Codigo nuevo de la tarea Practicas-2 semana 9
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,23 +14,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ConsultaController {
 
     
-    private final ProductoService productoService;  
+    private final ProductoServices productoServices;
+    private final CategoriaServices categoriaServices; //Codigo nuevo de la tarea Practicas-2 semana 9
 
-    public ConsultaController(ProductoService productoService) {
-        this.productoService = productoService;
+    //Codigo nuevo de la tarea Practicas-2 semana 9
+    public ConsultaController(ProductoServices productoServices, CategoriaServices categoriaServices) {
+        this.productoServices = productoServices;
+        this.categoriaServices = categoriaServices;
     }
     
+    //Codigo nuevo de la tarea Practicas-2 semana 9
     @GetMapping("/listado")
     public String listado(Model model) {
-        var lista = productoService.getProductos(false);
+        var lista = productoServices.getProductos(false);
+        var categorias = categoriaServices.getCategorias(true);
         model.addAttribute("productos", lista);
+        model.addAttribute("categorias", categorias);
         return "/consultas/listado";
-    }
+}
+
     
     @PostMapping("/consultaDerivada")
     public String consultaDerivada(@RequestParam() double precioInf,
             @RequestParam() double precioSup, Model model) {
-        var lista = productoService.consultaDerivada(precioInf, precioSup);
+        var lista = productoServices.consultaDerivada(precioInf, precioSup);
         model.addAttribute("productos", lista);
         model.addAttribute("precioInf", precioInf);
         model.addAttribute("precioSup", precioSup);
@@ -39,7 +47,7 @@ public class ConsultaController {
     @PostMapping("/consultaJPQL")
     public String consultaJPQL(@RequestParam() double precioInf,
             @RequestParam() double precioSup, Model model) {
-        var lista = productoService.consultaJPQL(precioInf, precioSup);
+        var lista = productoServices.consultaJPQL(precioInf, precioSup);
         model.addAttribute("productos", lista);
         model.addAttribute("precioInf", precioInf);
         model.addAttribute("precioSup", precioSup);
@@ -49,10 +57,21 @@ public class ConsultaController {
     @PostMapping("/consultaSQL")
     public String consultaSQL(@RequestParam() double precioInf,
             @RequestParam() double precioSup, Model model) {
-        var lista = productoService.consultaSQL(precioInf, precioSup);
+        var lista = productoServices.consultaSQL(precioInf, precioSup);
         model.addAttribute("productos", lista);
         model.addAttribute("precioInf", precioInf);
         model.addAttribute("precioSup", precioSup);
         return "/consultas/listado";
     }
+
+    //Codigo nuevo de la tarea Practicas-2 semana 9
+    @PostMapping("/consultaAmpliada")
+    public String consultaAmpliada(@RequestParam("idCategoria") Integer idCategoria, Model model) {
+        var productosPorCategoria = productoServices.getProductosPorCategoria(idCategoria);
+        var categorias = categoriaServices.getCategorias(true);
+        model.addAttribute("productosPorCategoria", productosPorCategoria);
+        model.addAttribute("categorias", categorias);
+        return "/consultas/listado";
+    }
+
 }

@@ -4,7 +4,7 @@
  */
 package com.tienda.repository;
 
-import com.tienda.tienda.domain.Categoria;
+import com.tienda.domain.Categoria;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
  

@@ -26,11 +26,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CategoriaController {
 
     @Autowired
-    private CategoriaService categoriaService;
+    private CategoriaServices categoriaServices;
     
     @GetMapping("/listado")
     public String listado(Model model) {
-        var categorias = categoriaService.getCategorias(false);
+        var categorias = categoriaServices.getCategorias(false);
         model.addAttribute("categorias", categorias);
         model.addAttribute("totalCategorias", categorias.size());
         return "/categoria/listado";
@@ -42,7 +42,7 @@ public class CategoriaController {
     @PostMapping("/guardar")
     public String guardar(@Valid Categoria categoria,@RequestParam MultipartFile imagenFile, RedirectAttributes redirectAttributes) {
         
-        categoriaService.save(categoria,imagenFile);        
+        categoriaServices.save(categoria,imagenFile);        
         redirectAttributes.addFlashAttribute("todoOk",messageSource.getMessage("mensaje.actualizado",null,Locale.getDefault()));
         
         return "redirect:/categoria/listado";
@@ -53,7 +53,7 @@ public class CategoriaController {
         String titulo="todoOk";
         String detalle="mensaje.eliminado";
         try {
-          categoriaService.delete(idCategoria);          
+          categoriaServices.delete(idCategoria);          
         } catch (IllegalArgumentException e) {            
             titulo="error"; // Captura la excepción de argumento inválido para el mensaje de "no existe"
             detalle="cateogira.error01";
@@ -70,7 +70,7 @@ public class CategoriaController {
 
     @GetMapping("/modificar/{idCategoria}")    
     public String modificar(@PathVariable("idCategoria") Integer idCategoria, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Categoria> categoriaOpt = categoriaService.getCategoria(idCategoria);
+        Optional<Categoria> categoriaOpt = categoriaServices.getCategoria(idCategoria);
         if (categoriaOpt.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", messageSource.getMessage("categoria.error01", null, Locale.getDefault()));
             return "redirect:/categoria/listado";

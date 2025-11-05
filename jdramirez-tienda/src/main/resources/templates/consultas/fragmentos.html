@@ -69,7 +69,75 @@
                 <div th:replace="~{consultas/fragmentos :: formularioConsulta('/consultas/consultaDerivada', #{pruebas.ampliadas}, 'primary')}"></div>
                 <div th:replace="~{consultas/fragmentos :: formularioConsulta('/consultas/consultaJPQL', #{pruebas.jpql}, 'warning')}"></div>
                 <div th:replace="~{consultas/fragmentos :: formularioConsulta('/consultas/consultaSQL', #{pruebas.nativo}, 'success')}"></div>
-                <div><div class="card">Acá va su consulta de la tarea #2</div></div>
+                <!-- Codigo nuevo de la tarea Practicas-2 semana 9 -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5>Consulta Ampliada: Productos por Categoría</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <form th:action="@{/consultas/consultaAmpliada}" method="post" class="row g-3 justify-content-center">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Seleccione una Categoría:</label>
+                                <select class="form-select" name="idCategoria" required>
+                                    <option value="">-- Seleccione una categoría --</option>
+
+                                    <!-- 🔹 Categorías fijas (escritas directamente en el HTML) -->
+                                    <option value="1">Laptops</option>
+                                    <option value="2">Teléfonos</option>
+                                    <option value="3">Audífonos</option>
+                                    <option value="4">Tablets</option>
+                                    <option value="5">Accesorios</option>
+
+                                    <!-- 🔹 Categorías dinámicas desde la base de datos -->
+                                    <option th:each="c : ${categorias}" 
+                                            th:value="${c.idCategoria}" 
+                                            th:text="${c.descripcion}"></option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100 text-white">
+                                    <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card-footer bg-white">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover align-middle">
+                                <thead class="table-primary">
+                                    <tr class="text-center">
+                                        <th>ID</th>
+                                        <th>Producto</th>
+                                        <th>Detalle</th>
+                                        <th>Precio</th>
+                                        <th>Existencias</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="p : ${productosPorCategoria}" class="text-center">
+                                        <td th:text="${p.idProducto}">1</td>
+                                        <td th:text="${p.descripcion}">Producto ejemplo</td>
+                                        <td th:text="${p.detalle}">Detalle ejemplo</td>
+                                        <td th:text="${#numbers.formatCurrency(p.precio)}">$0.00</td>
+                                        <td>
+                                            <span th:if="${p.existencias > 0}" class="badge bg-success" th:text="${p.existencias} + ' disponibles'"></span>
+                                            <span th:unless="${p.existencias > 0}" class="badge bg-danger">Agotado</span>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(productosPorCategoria)}">
+                                        <td colspan="5" class="text-center text-muted">
+                                            No hay productos para esta categoría.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
 

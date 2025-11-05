@@ -16,20 +16,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class IndexController {
     
     // Las últimas versiones de Spring, recomiendan utilziar final y contructor en lugar de @autowired
-    private final ProductoService productoService;
-    private final CategoriaService categoriaService;
+    private final ProductoServices productoServices;
+    private final CategoriaServices categoriaServices;
     
     // (Spring inyecta automáticamente)
-    public IndexController(ProductoService productoService, CategoriaService categoriaService) {
-        this.productoService = productoService;
-        this.categoriaService = categoriaService;
+    public IndexController(ProductoServices productoServices, CategoriaServices categoriaServices) {
+        this.productoServices = productoServices;
+        this.categoriaServices = categoriaServices;
     }
     
     @GetMapping("/")
     public String cargarPaginaInicio(Model model) {
-        var lista = productoService.getProductos(true);
+        var lista = productoServices.getProductos(true);
         model.addAttribute("productos", lista);
-        var categorias = categoriaService.getCategorias(true);
+        var categorias = categoriaServices.getCategorias(true);
         model.addAttribute("categorias", categorias);
         return "/index";
     }
@@ -37,7 +37,7 @@ public class IndexController {
     @GetMapping("/consultas/{idCategoria}")
     public String listado(@PathVariable("idCategoria") Integer idCategoria, Model model) {
         model.addAttribute("idCategoriaActual", idCategoria);
-        var categoriaOptional = categoriaService.getCategoria(idCategoria);
+        var categoriaOptional = categoriaServices.getCategoria(idCategoria);
         if (categoriaOptional.isEmpty()) {
             //Puede ser que no se exista la categoria buscada...
             model.addAttribute("productos", java.util.Collections.emptyList());
@@ -46,7 +46,7 @@ public class IndexController {
             var productos = categoria.getProductos();
             model.addAttribute("productos", productos);
         }
-        var categorias = categoriaService.getCategorias(true);
+        var categorias = categoriaServices.getCategorias(true);
         model.addAttribute("categorias", categorias);
         return "/index";
     }
